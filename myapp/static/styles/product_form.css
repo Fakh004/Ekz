@@ -1,0 +1,189 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f2f4f8;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+h1 {
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+    margin-right: 15px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    padding: 8px 14px;
+    margin-right: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+img {
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.product-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.navbar {
+    margin-bottom: 20px;
+}
+
+.navbar a {
+    font-weight: bold;
+}
+
+.product-detail {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 30px auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-detail h1 {
+    margin-bottom: 20px;
+    color: #222;
+}
+
+.product-detail p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.product-detail img {
+    display: block;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+    display: block;
+    margin: 20px auto 0;
+    text-align: center;
+}
+
+.back-button button {
+    padding: 10px 18px;
+    font-size: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.back-button button:hover {
+    background-color: #0056b3;
+}
+
+
+.form-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background-color: #fff;
+    padding: 30px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form-container h1 {
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+}
+
+.form-container form p {
+    margin-bottom: 15px;
+}
+
+.form-container button {
+    display: block;
+    width: 100%;
+    padding: 12px 0;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+    background-color: #218838;
+}
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 15px;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.cancel-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.cancel-link:hover {
+    text-decoration: underline;
+}
+
+.form-container p {
+    margin-bottom: 20px;
+    color: #555;
+}

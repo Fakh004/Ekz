@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Create Product</title>
+    <link rel="stylesheet" href="{% static 'styles/product_form.css' %}" />
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Create New Product</h1>
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit">Save</button>
+        </form>
+
+        <a href="{% url 'product-list' %}" class="back-link"> Back to product list</a>
+    </div>
+
+</body>
+</html>

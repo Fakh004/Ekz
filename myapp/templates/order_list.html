@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order List</title>
+  <link rel="stylesheet" href="{% static 'styles/order_list.css' %}" />
+</head>
+<body>
+
+  <a href="{% url 'order-create' %}">+ Create Order</a>
+  <h1>Order List</h1>
+
+  {% for order in orders %}
+    <div class="order-card">
+      <h2>User: {{ order.user.username }}</h2>
+      <h2>Total Amount: {{ order.total_amount }}</h2>
+      <h2>Status: {{ order.status }}</h2>
+
+      <div class="actions">
+        <a href="{% url 'order-detail' order.id %}"><button>Detail</button></a>
+        <a href="{% url 'order-delete' order.id %}"><button>Delete</button></a>
+      </div>
+    </div>
+  {% endfor %}
+
+</body>
+</html>

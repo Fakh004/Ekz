@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="{% static 'styles/product_form.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'product-create' %}">➕ Create Product</a>
+        <a href="{% url 'cart-list' %}">🛒 Cart</a>
+        <a href="{% url 'order-list' %}">📦 Orders</a>
+        <a href="{% url 'profile-list' %}">Profiles</a>
+    </div>
+
+    <h1>Product List</h1>
+
+    {% for product in products %}
+        <div class="product-container">
+            <h2>{{ product.name }}</h2>
+            <p><strong>Description:</strong> {{ product.description }}</p>
+            <p><strong>Price:</strong> ${{ product.price }}</p>
+            <p><strong>Quantity:</strong> {{ product.quantity }}</p>
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
+            <p><strong>Added:</strong> {{ product.created_at }}</p>
+
+            <a href="{% url 'product-detail' product.id %}"><button>Details</button></a>
+            <a href="{% url 'product-update' product.id %}"><button>Update</button></a>
+            <a href="{% url 'product-delete' product.id %}"><button>Delete</button></a>
+        </div>
+    {% endfor %}
+
+</body>
+</html>

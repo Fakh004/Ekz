@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cart List</title>
+    <link rel="stylesheet" href="{% static 'styles/cart_form.css' %}" />
+</head>
+<body>
+    <nav>
+        <a href="{% url 'cart-create' %}">Create Cart</a> |
+        <a href="{% url 'order-create' %}">Create Order</a> |
+        <a href="{% url 'product-list' %}">Back to Products</a>
+    </nav>
+
+    <h1>Cart List</h1>
+
+    {% for cart in carts %}
+    <div class="cart-item">
+        <p><strong>User:</strong> {{ cart.user.username }}</p>
+        <p><strong>Product:</strong> {{ cart.product.name }}</p>
+        <p><strong>Quantity:</strong> {{ cart.quantity }}</p>
+        <p><strong>Added at:</strong> {{ cart.created_at }}</p>
+
+        <a href="{% url 'cart-detail' cart.id %}"><button>Detail</button></a>
+        <a href="{% url 'cart-update' cart.id %}"><button>Update</button></a>
+        <a href="{% url 'cart-delete' cart.id %}"><button>Delete</button></a>
+    </div>
+    <hr>
+    {% empty %}
+    <p>No carts found.</p>
+    {% endfor %}
+</body>
+</html>

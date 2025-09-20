@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cart Detail</title>
+  <link rel="stylesheet" href="{% static 'styles/cart_detail.css' %}" />
+</head>
+<body>
+  <section class="cart-detail">
+    <h1>Cart Detail</h1>
+
+    <div class="cart-info">
+      <p><strong>Product:</strong> {{ cart.product.name }}</p>
+      <p><strong>Quantity:</strong> {{ cart.quantity }}</p>
+      <p><strong>Created At:</strong> {{ cart.created_at|date:"d.m.Y H:i" }}</p>
+    </div>
+
+    <a href="{% url 'cart-list' %}"><button>Back to Cart List</button></a>
+  </section>
+</body>
+</html>
