@@ -36,6 +36,9 @@ def login(request):
         form = LoginForm()
     return render(request,'login.html',{'form':form,'context':context})
 
+def logout_profile(request):
+    logout(request)
+    return redirect('login')
 
 class ProfileListView(ListView):
     model = Profile
@@ -67,6 +70,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
+
 
 class ProductCreateView(CreateView):
     model = Product
@@ -133,17 +137,40 @@ class OrderListView(ListView):
     context_object_name = 'orders'
 
     def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user)
     
+
+
 class OrderCreateView(CreateView):
     model = Order
-    form_class = OrderForm
+    fields = [] 
     template_name = 'order_create.html'
     success_url = reverse_lazy('order-list')
 
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+        user = self.request.user
+        cart_items = Cart.objects.filter(user=user)
+
+        total = 0
+        for item in cart_items:
+            total += item.product.price * item.quantity
+
+        if cart_items.exists():
+            form.instance.user = user
+            form.instance.total_amount = total
+            form.instance.status = 'в обработке'
+            response = super().form_valid(form)
+            cart_items.delete()
+            return response
+        else:
+            return redirect('cart-list')
+
+
 
 class OrderDetailView(DetailView):
     model = Order

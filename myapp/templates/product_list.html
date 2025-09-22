@@ -10,10 +10,13 @@
 <body>
 
     <div class="navbar">
+        <div>
+        <a href="{% url 'profile-list' %}">Profiles</a>
+        <a href="{% url 'logout' %}">Logout</a>
+        </div> <br> <br>
         <a href="{% url 'product-create' %}">➕ Create Product</a>
         <a href="{% url 'cart-list' %}">🛒 Cart</a>
         <a href="{% url 'order-list' %}">📦 Orders</a>
-        <a href="{% url 'profile-list' %}">Profiles</a>
     </div>
 
     <h1>Product List</h1>

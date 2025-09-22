@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static 'styles/order_confirm_delete.css' %}">
 </head>
 <body>
     <h1>Orders delete</h1>
@@ -11,7 +13,7 @@
     <form action="" method="post">
         {% csrf_token %}
         <button type="submit">delete</button>
-        <a href="{% url 'order-list' %}">otmena</a>
+        <a href="{% url 'order-list' %}">cancel</a>
     </form>
 </body>
 </html>

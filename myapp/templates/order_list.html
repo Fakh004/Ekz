@@ -10,6 +10,7 @@
 <body>
 
   <a href="{% url 'order-create' %}">+ Create Order</a>
+  <a href="{% url 'cart-list' %}">Back to cart list</a>
   <h1>Order List</h1>
 
   {% for order in orders %}
