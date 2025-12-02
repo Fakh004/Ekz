@@ -4,37 +4,52 @@ from .models import User,Profile,Product,Cart,Order
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.urls import reverse_lazy
+from django.http import HttpResponse
+from django.contrib import messages
 
 def home(request):
     return render(request, 'home.html')
 
 def register(request):
-    if request.method == 'POST':
-        user_form = UserForm(request.POST)
+    if request.method == 'GET':
+        return render(request, 'register.html')
+    elif request.method == 'POST':
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirmPassword = request.POST.get('confirmPassword')
 
-        if user_form.is_valid():
-            user_form.save()
-            return redirect('login')
-    user_form = UserForm()
-    return render(request,'register.html',{'user_form':user_form})
+        if not username or not email or not password or not confirmPassword:
+                return HttpResponse('ALL FIELDS ARE REQUIRED !!!')
+    
+        if password != confirmPassword:
+                return HttpResponse("Passwords don't match!")
+    
+        if User.objects.filter(username=username).exists():
+                return HttpResponse("Username already taken!")
+    
+        user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                first_name=name,
+                last_name=surname
+            )
+        return redirect ('login')
 
 def login(request):
-    form = LoginForm(request.POST or None)
-    context = None
-
     if request.method == 'POST':
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request,username=username,password=password)
-            if user is not None:
-                auth_login(request,user)
-                return redirect('product-list')
-            else:
-                context = 'Неправильный логин или пароль'
-                return render(request,'login.html',{'context':context})
-        form = LoginForm()
-    return render(request,'login.html',{'form':form,'context':context})
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            auth_login(request, user)  
+            return redirect('product-list')
+        else:
+            return render(request, 'login.html', {'error': 'Неверный логин или пароль'})
+    return render(request, 'login.html')
 
 def logout_profile(request):
     logout(request)
@@ -49,22 +64,35 @@ class ProfileListView(ListView):
         return Profile.objects.all()
 
 
-class ProfileUpdateView(UpdateView):
-    model = Profile
-    form_class = ProfileForm
-    template_name = 'profile_edit.html'
-    success_url = reverse_lazy('product-list')
+def profile_update_view(request, pk):
+    profile = Profile.objects.get(id=pk)
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile-list')
+    else:
+        form = ProfileForm(instance=profile)
+    return render(request, 'profile_edit.html', {'form': form})
 
 
-class ProfileDetailView(DetailView):
-    model = Profile
-    template_name = 'profile_detail.html'
-    context_object_name = 'profile'
+def profile_detail(request, pk):
+    if not request.user.is_authenticated:
+        messages.error(request, "❌ Вы не вошли в систему! Пожалуйста, выполните вход.")
+        return redirect('login')
 
-    def get_object(self):
-        return self.request.user.profile
+    profile = Profile.objects.get(id=pk)
+    return render(request, 'profile_detail.html', {'profile': profile})
 
-
+def profile_delete_view(request, pk):
+    profile = Profile.objects.filter(id=pk).first()
+    if not profile:
+        return HttpResponse(f"Profile with id {pk} not found")
+    if request.method == "GET":
+        return render(request, "profile_confirm_delete.html", context={"profile":profile})
+    elif request.method == "POST":
+        profile.delete()
+        return redirect("profile-list")
 
 class ProductListView(ListView):
     model = Product
@@ -88,21 +116,27 @@ class ProductUpdateView(UpdateView):
     template_name = 'product_create.html'
     success_url = reverse_lazy('product-list')
 
-class ProductDeleteView(DeleteView):
-    model = Product
-    template_name = 'product_confirm_delete.html'
-    success_url = reverse_lazy('product-list')
+def product_delete_view(request, pk):
+    product = Product.objects.filter(id=pk).first()
+    if not product:
+        return HttpResponse(f"Product with id {pk} not found")
+    if request.method == "GET":
+        return render(request, "product_confirm_delete.html", context={"product":product})
+    elif request.method == "POST":
+        product.delete()
+        return redirect("product-list")
 
 
 
 
-class CartListView(ListView):
-    model = Cart
-    template_name = 'cart_list.html'
-    context_object_name = 'carts'
+def cart_list(request):
+    if request.user.is_authenticated:
+        carts = Cart.objects.filter(user=request.user)
+        return render(request, 'cart_list.html', {'carts': carts})
+    else:
+        return redirect('register')
 
-    def get_queryset(self):
-        return Cart.objects.filter(user=self.request.user)
+            
     
 class CartCreateView(CreateView):
     model = Cart
@@ -127,19 +161,7 @@ class CartUpdateView(UpdateView):
 class CartDeleteView(DeleteView):
     model = Cart
     template_name = 'cart_confirm_delete.html'
-    success_url = reverse_lazy('cart-list')
-
-
-
-class OrderListView(ListView):
-    model = Order
-    template_name = 'order_list.html'
-    context_object_name = 'orders'
-
-    def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
-    
-
+    success_url = reverse_lazy('cart-list')    
 
 class OrderCreateView(CreateView):
     model = Order
@@ -149,7 +171,7 @@ class OrderCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect('login')
+            return redirect('register')
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -180,4 +202,13 @@ class OrderDeleteView(DeleteView):
     model = Order
     template_name = 'order_confirm_delete.html'
     success_url = reverse_lazy('order-list')
+
+def order_list(request):
+    if not request.user.is_authenticated:
+        messages.error(request, "❌ Ошибка: вы не вошли в систему!")
+        return redirect('register')  
+
+    orders = Order.objects.filter(user=request.user)
+    return render(request, 'order_list.html', {'orders': orders})
+
     

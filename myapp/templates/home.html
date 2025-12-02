@@ -7,5 +7,14 @@
 </head>
 <body>
     <h1>This is home page</h1>
+ {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-danger text-center">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 </body>
 </html>
