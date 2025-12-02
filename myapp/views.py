@@ -6,6 +6,7 @@ from django.views.generic import ListView,DetailView,CreateView,UpdateView,Delet
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def home(request):
     return render(request, 'home.html')
@@ -65,6 +66,9 @@ class ProfileListView(ListView):
 
 
 def profile_update_view(request, pk):
+    if not request.user.is_authenticated:
+        messages.error(request, "❌ Вы не вошли в систему! Пожалуйста, выполните вход.")
+        return redirect('login')
     profile = Profile.objects.get(id=pk)
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -85,6 +89,9 @@ def profile_detail(request, pk):
     return render(request, 'profile_detail.html', {'profile': profile})
 
 def profile_delete_view(request, pk):
+    if not request.user.is_authenticated:
+        messages.error(request, "❌ Вы не вошли в систему! Пожалуйста, выполните вход.")
+        return redirect('login')
     profile = Profile.objects.filter(id=pk).first()
     if not profile:
         return HttpResponse(f"Profile with id {pk} not found")
@@ -117,6 +124,9 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('product-list')
 
 def product_delete_view(request, pk):
+    if not request.user.is_authenticated:
+        messages.error(request, "❌ Вы не вошли в систему! Пожалуйста, выполните вход.")
+        return redirect('login')
     product = Product.objects.filter(id=pk).first()
     if not product:
         return HttpResponse(f"Product with id {pk} not found")
